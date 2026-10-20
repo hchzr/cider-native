@@ -418,6 +418,16 @@ export function mixTitles(clusters) {
 }
 export const mixTitle = (cluster) => (cluster ? mixTitles([cluster]).get(cluster.id) : 'Discover Mix');
 
+// ---------------------------------------------------------------------------------------------------- play log
+// How many songs at the top of the recent-plays list (newest first) are new since the last look, given the ids that were
+// at its top then. Everything above the first song seen before is new; a replay of a recent song is not counted (better
+// to miss a play than to log the whole history twice); nothing seen before at all means a gap of more than the list.
+export function newPlays(ids, prevHead) {
+  if (!prevHead?.length) return 0;   // first look: the visible history is already counted as recent plays
+  const seen = new Set(prevHead), i = ids.findIndex((id) => seen.has(id));
+  return i < 0 ? ids.length : i;
+}
+
 // ---------------------------------------------------------------------------------------------------- settings
 export const DISCOVER_DEFAULTS = { adventure: 0.5, length: 30, era: 'any', deepCuts: true, skipClusters: [], avoidGenres: [], refresh: 'weekly' };
 export function parseDiscoverSettings(raw) {

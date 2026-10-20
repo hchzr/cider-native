@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { norm, artistTokens, songKey, usefulGenres, creditOf, shortName, mixTitles, buildProfile, genreFit, pickSeeds, clusterSeeds, buildGraph, pagerank, rankArtists, candidateSongs, scoreSongs, weightsFor, learnWeights, selectMix, quotasFor, sequence, reasonFor, popularity, recallAtK, tasteSummary, FEATURES, parseDiscoverSettings, DISCOVER_DEFAULTS, describeLearning } from '../discover-engine.js';
+import { norm, artistTokens, songKey, usefulGenres, creditOf, shortName, mixTitles, buildProfile, genreFit, pickSeeds, clusterSeeds, buildGraph, pagerank, rankArtists, candidateSongs, scoreSongs, weightsFor, learnWeights, selectMix, quotasFor, sequence, reasonFor, popularity, recallAtK, tasteSummary, FEATURES, parseDiscoverSettings, DISCOVER_DEFAULTS, describeLearning, newPlays } from '../discover-engine.js';
 
 // Synthetic fixtures only (the repository is public): two separate tastes, "rock" and "jazz", plus a hub artist.
 const song = (id, name, artistName, artistId, genres, extra = {}) => ({ id: String(id), name, artistName, artistId: String(artistId), albumName: `${name} LP`, genres, year: 2015, ...extra });
@@ -158,5 +158,13 @@ assert.equal(parseDiscoverSettings({ adventure: 0 }).adventure, 0, 'zero is a va
 assert.deepEqual(describeLearning(null), []);
 assert.deepEqual(describeLearning({ novelty: 0.3, pop: -0.2, genre: 0.01 }), ['More artists new to you', 'More lesser-known songs']);
 assert.ok(clusters.every((c) => c.id.startsWith('c:')) && byName('Rocker A').id === 'c:rocker a', 'clusters are named after their top artist');
+
+// ---- play log alignment
+assert.equal(newPlays(['a', 'b', 'c'], []), 0, 'first look: nothing is new');
+assert.equal(newPlays(['a', 'b', 'c'], ['a', 'b', 'c']), 0, 'no change');
+assert.equal(newPlays(['x', 'y', 'a', 'b'], ['a', 'b', 'c']), 2, 'two new plays on top');
+assert.equal(newPlays(['b', 'a', 'c'], ['a', 'b', 'c']), 0, 'a replay of a recent song does not re-log the history');
+assert.equal(newPlays(['x', 'b', 'a', 'c'], ['a', 'b', 'c']), 1, 'a new play then a replay');
+assert.equal(newPlays(['p', 'q', 'r'], ['a', 'b', 'c']), 3, 'more plays than the list holds: all of it is new');
 
 console.log('discover tests passed');

@@ -625,7 +625,7 @@ export function startDiscover() {
   load();
   // keep the play log growing while Cider runs: Apple only remembers the last ~100 plays
   const grow = () => data.refreshPlayLog().catch(() => {});
-  if (!logTimer) { logFirst = setTimeout(grow, 30e3); logTimer = setInterval(grow, 3 * HOUR); }
+  if (!logTimer) { logFirst = setTimeout(() => { grow(); data.kv.prune(30 * DAY, ['a:', 'c:', 'c2:']).catch(() => {}); }, 30e3); logTimer = setInterval(grow, 3 * HOUR); }
 }
 export function stopDiscover() { clearTimeout(logFirst); clearInterval(logTimer); logTimer = 0; }
 export const openDiscover = () => go(PATH);

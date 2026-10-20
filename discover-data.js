@@ -1,7 +1,7 @@
 // Discover data layer: reads listening signals and Apple's artist graph through Cider's authenticated Apple Music client
 // (CiderApp.v3), with an IndexedDB cache, a small concurrency limit and batched artist requests (40 artists with all
 // their views in one call), and performs the page's actions (play, love, add, save as a playlist).
-import { norm, artistTokens } from './discover-engine.js';
+import { norm, artistTokens, newPlays } from './discover-engine.js';
 import { warn } from './core.js';
 
 const DAY = 864e5, HOUR = 36e5;
@@ -24,6 +24,15 @@ export const kv = {
   del: (k) => tx('readwrite', (s) => s.delete(k)).catch(() => {}),
   getMany: async (keys) => { const d = await db(); return new Promise((res) => { const t = d.transaction('kv', 'readonly'), s = t.objectStore('kv'), out = new Array(keys.length); keys.forEach((k, i) => { const r = s.get(k); r.onsuccess = () => { out[i] = r.result; }; }); t.oncomplete = () => res(out); t.onerror = () => res(out); }); },
   setMany: async (entries) => { const d = await db(); return new Promise((res) => { const t = d.transaction('kv', 'readwrite'), s = t.objectStore('kv'); for (const [k, v] of entries) s.put(v, k); t.oncomplete = res; t.onerror = res; }); },
+  // Drop cache entries ({ t, v }) older than maxAge whose key starts with one of the prefixes.
+  prune: async (maxAge, prefixes) => {
+    const d = await db(), now = Date.now();
+    return new Promise((res) => {
+      const t = d.transaction('kv', 'readwrite'), c = t.objectStore('kv').openCursor(); let n = 0;
+      c.onsuccess = () => { const cur = c.result; if (!cur) return; const k = String(cur.key); if (prefixes.some((p) => k.startsWith(p)) && cur.value?.t && now - cur.value.t > maxAge) { cur.delete(); n++; } cur.continue(); };
+      t.oncomplete = () => res(n); t.onerror = () => res(n);
+    });
+  },
 };
 
 // ---- Apple Music requests: limited concurrency, one retry, optional cache ----
@@ -144,13 +153,11 @@ export async function collectSignals({ savedPlaylistId = null, onStep = () => {}
 // previously seen head are new plays. Over weeks this gives a much longer memory than the API.
 async function updatePlayLog(recent) {
   const log = (await kv.get('playlog')) || [], head = (await kv.get('playlog-head')) || [];
-  const ids = recent.map((s) => s.id);
-  let cut = ids.length;
-  if (head.length) for (let i = 0; i < ids.length; i++) { if (head.slice(0, 3).every((h, j) => ids[i + j] === h)) { cut = i; break; } }
-  else cut = 0;   // first run: the visible history is already counted as "recent"
+  const ids = recent.map((s) => s.id), cut = newPlays(ids, head);
   const now = Date.now(), fresh = recent.slice(0, cut).map((s, i) => ({ id: s.id, isrc: s.isrc, name: s.name, artistName: s.artistName, artistId: s.artistId, albumName: s.albumName, genres: s.genres, year: s.year, t: now - i * 4 * 60e3 }));
   const next = [...fresh, ...log].slice(0, 5000);
-  if (fresh.length || !head.length) { await kv.set('playlog', next); await kv.set('playlog-head', ids.slice(0, 10)); }
+  if (fresh.length) await kv.set('playlog', next);
+  if (ids.length && ids.slice(0, 30).join() !== head.join()) await kv.set('playlog-head', ids.slice(0, 30));
   return next;
 }
 export const refreshPlayLog = async () => { const r = (await pages('/v1/me/recent/played/tracks', { types: 'songs' }, { size: 30, max: 1 })).map(songFrom).filter(Boolean); if (r.length) await updatePlayLog(r); };
@@ -300,8 +307,4 @@ export async function savePlaylist(songs, { name = 'Discover Mix', description =
   const r = await rpc.createPlaylist({ name, description, tracks, allowLibraryImport: true });
   if (!r?.ok) throw new Error(r?.error?.message || r?.message || 'Could not create the playlist');
   return { id: r.id, replaced: false };
-}
-export async function searchArtist(term) {
-  const d = await call(`/v1/catalog/${sf}/search`, { term, types: 'artists', limit: 6 });
-  return rows(d?.results?.artists).map((a) => ({ id: String(a.id), name: a.attributes?.name, art: a.attributes?.artwork?.url, genres: a.attributes?.genreNames || [] }));
 }

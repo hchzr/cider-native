@@ -62,6 +62,9 @@ const step = (text, progress) => { S.step = text; S.progress = progress; emit();
 async function gather(prev) {
   const saved = ls.get(LS_SAVED);
   const { tracks, libraryArtists, recent } = await data.collectSignals({ savedPlaylistId: saved, onStep: step });
+  // songs Discover put in the library by saving a mix are known, but they are its choice, not yours
+  const savedIds = new Set((await data.kv.get('saved-ids')) || []);
+  for (const t of tracks) if (t.source === 'library' && savedIds.has(t.id)) t.source = 'discover';
   implicitFeedback(prev, tracks);
   const blocked = S.fb.blocked.map((b) => b.name);
   let profile = buildProfile({ tracks, libraryArtists, blocked });
@@ -240,6 +243,7 @@ async function save() {
     const out = await data.savePlaylist(r.mix, { description: desc, savedId: ls.get(LS_SAVED) });
     ls.set(LS_SAVED, out.id); r.savedIds = [...new Set([...(r.savedIds || []), ...r.mix.map((s) => s.id)])]; r.savedAt = Date.now();
     await data.kv.set('result', r);
+    await data.kv.set('saved-ids', [...new Set([...((await data.kv.get('saved-ids')) || []), ...r.mix.map((s) => s.id)])].slice(-5000));
     note(out.replaced ? 'Updated your “Discover Mix” playlist' : 'Saved as “Discover Mix” in your playlists');
   } catch (e) { warn(e); note('Couldn’t save the playlist'); }
 }

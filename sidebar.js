@@ -20,13 +20,14 @@ const BASE = `
    below could then only see the sidebar itself instead of the page under it */
 :host(.on) { display: block; animation: cardIn .55s var(--ease) backwards; }
 @media (prefers-reduced-motion: reduce) { :host(.on) { animation: none; } * { transition-duration: .01ms !important; } }
-:host { --fg: #fff; --accent: #fa2d48; --sec: color-mix(in srgb, var(--fg) 50%, transparent); --solid: #2b2b2e; --hover: color-mix(in srgb, var(--fg) 8%, transparent); --fill: color-mix(in srgb, var(--fg) 11%, transparent); --sel: color-mix(in srgb, var(--fg) 15%, transparent); --line: color-mix(in srgb, var(--fg) 12%, transparent); --tint: rgba(255,255,255,.035); }
-:host(.light) { --tint: rgba(236,236,236,.55); --sel: rgba(0,0,0,.085); --hover: rgba(0,0,0,.045); --fill: rgba(0,0,0,.06); --solid: #f1f1f2; }
+:host { --fg: #fff; --accent: #fa2d48; --sec: color-mix(in srgb, var(--fg) 50%, transparent); --solid: #2b2b2e; --hover: color-mix(in srgb, var(--fg) 8%, transparent); --fill: color-mix(in srgb, var(--fg) 11%, transparent); --sel: color-mix(in srgb, var(--fg) 15%, transparent); --line: color-mix(in srgb, var(--fg) 12%, transparent); --tint: rgba(255,255,255,.09); --glass: blur(50px) saturate(1.6) brightness(.6); }
+:host(.light) { --tint: rgba(236,236,236,.55); --glass: blur(50px) saturate(1.8); --sel: rgba(0,0,0,.085); --hover: rgba(0,0,0,.045); --fill: rgba(0,0,0,.06); --solid: #f1f1f2; }
 * { box-sizing: border-box; -webkit-app-region: no-drag; }
 button { all: unset; box-sizing: border-box; cursor: default; }
-/* Music's glass (macOS 26): the page runs under the panel; a heavy blur and a strong colour lift turn it into a tinted glow */
+/* Music's glass (macOS 26), matched on screenshots: the page runs under the panel, blurred heavily; in dark mode it is darkened
+   to ~60% under a light veil (a pink card becomes a deep magenta glow, a pale photo a dark warm grey), in light mode lifted */
 .card { position: absolute; inset: 0; overflow: hidden; display: flex; flex-direction: column; background: var(--tint);
-  -webkit-backdrop-filter: blur(50px) saturate(2); backdrop-filter: blur(50px) saturate(2); }
+  -webkit-backdrop-filter: var(--glass); backdrop-filter: var(--glass); }
 .wrap { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
 ` + sfCss(SIDE);

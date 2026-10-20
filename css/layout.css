@@ -24,5 +24,5 @@ html.nsb-left body:not(#nt) .item-shelf, html.nsb-left body:not(#nt) .mediaitem-
   margin-left: calc(-1 * (var(--leftSidebarWidth) + 34px)); padding-left: calc(var(--leftSidebarWidth) + 34px); scroll-padding-left: calc(var(--leftSidebarWidth) + 34px); }
 /* artist hero: under the glass too, its portrait and name centred on the content area */
 html.nsb-left body:not(#nt) .artist-page { margin-left: calc(-1 * (var(--leftSidebarWidth) + 34px)); }
-html.nsb-left body:not(#nt) .banner-container .header-content { padding-left: var(--leftSidebarWidth); }
+html.nsb-left body:not(#nt) .banner-container .header-content { padding-left: var(--leftSidebarWidth); padding-right: 0; }
 html.nsb-left body:not(#nt) .artist-body { padding-left: calc(var(--leftSidebarWidth) + 34px); }

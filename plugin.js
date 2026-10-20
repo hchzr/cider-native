@@ -9,7 +9,7 @@ import { startPlayer, stopPlayer, setPlayerScale, playerDiagnostics } from './pl
 import { startNotifications, stopNotifications, startShortcuts, stopShortcuts, startWindowControls, stopWindowControls, startIcons, stopIcons, iconsDiagnostics, audioReport } from './system.js';
 import { openPanel } from './panel.js';
 
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const MODULES = {
   sidebar: { start: (s) => startSidebar({ discover: isOn(s, 'discoverRow') }), stop: stopSidebar },
   upNext: { start: startUpNext, stop: stopUpNext },

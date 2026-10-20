@@ -28,9 +28,32 @@ body:not(#nt) .track-list .ri-list-item .title-text { font-size: 13px; font-weig
 body:not(#nt) .track-list .ri-list-item .track-number, body:not(#nt) .track-list .ri-list-item .time { font-size: 13px; color: var(--nt-secondary); }
 body:not(#nt) .track-list .ri-list-item .menu-btn { color: var(--keyColor); }
 
-/* Artist pages: the header runs edge to edge under the toolbar like Music's artist hero (the page's own content box clips,
-   so the whole page is widened), and the content below sits on the plain page instead of an artwork-tinted card. */
+/* Artist pages (Music.app): the hero runs edge to edge under the toolbar (the page's own content box clips, so the whole page
+   is widened), dimmed slightly, with the name and buttons centred: a solid white play button between two glass circles.
+   In dark mode the page takes the artwork colour darkened to ~40% (ABBA's beige becomes Music's grey-brown, measured), with
+   the hero fading into it; Cider's light reflection under the hero is dropped. Top Songs: grey "…" and hairline rows. */
 body:not(#nt) .artist-page { margin: -50px -34px 0; }
 body:not(#nt) .banner-container { width: auto; border-radius: 0; }
+body:not(#nt) .banner-container .banner-artwork { filter: brightness(.82); -webkit-mask-image: linear-gradient(#000 62%, transparent); mask-image: linear-gradient(#000 62%, transparent); }
+body:not(#nt) .banner-container .header-content { align-items: center; text-align: center; }
+body:not(#nt) .banner-container .artist-name { color: #fff; text-shadow: 0 1px 12px rgba(0,0,0,.25); }
+body:not(#nt) .banner-container .hero-actions { gap: 26px; }
+body:not(#nt) .banner-container .hero-btn { width: 47px; height: 47px; color: #fff; }
+body:not(#nt) .banner-container .hero-btn:not(.hero-btn--play) :is(.c-btn--content, .nucleo-icon, .q-icon, svg) { color: #fff; }
+body:not(#nt) .banner-container .hero-btn .c-btn--surface { background: rgba(255,255,255,.16); box-shadow: inset 0 .5px 0 rgba(255,255,255,.3); -webkit-backdrop-filter: blur(12px) saturate(1.6); backdrop-filter: blur(12px) saturate(1.6); }
+body:not(#nt) .banner-container .hero-btn.hero-btn--play { width: 71px; height: 71px; color: #1d1d1f; }
+body:not(#nt) .banner-container .hero-btn--play :is(.c-btn--content, .nucleo-icon, .q-icon, svg) { color: #1d1d1f; }
+body:not(#nt) .banner-container .hero-btn.hero-btn--play .c-btn--surface { background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,.18); }
 body:not(#nt) .artist-body { background: none; padding-left: 34px; padding-right: 34px; }
+body:not(#nt):not(.body--light) .artist-page { --nt-artist: color-mix(in srgb, var(--artist-page-tint, #272626) 41%, black); background: var(--nt-artist); }
+body:not(#nt):not(.body--light) .banner-container { background: var(--nt-artist); }
+body:not(#nt):not(.body--light) .banner-container .header-blur-mask { background: linear-gradient(color-mix(in srgb, var(--nt-artist) 15%, transparent), color-mix(in srgb, var(--nt-artist) 90%, transparent)); }
+body:not(#nt):not(.body--light) .artist-body__reflection { display: none; }
 body:not(#nt):not(.body--light) .artist-body--on-light { --systemPrimary: rgba(255,255,255,.92); --systemSecondary: rgba(255,255,255,.55); --textDefault: #fff; color: rgba(255,255,255,.92); }
+body:not(#nt) .top-songs .c-listitem-short { position: relative; }
+body:not(#nt) .top-songs .c-listitem-short::after { content: ""; position: absolute; left: 60px; right: 0; bottom: 0; height: .5px; background: var(--nt-hairline); pointer-events: none; }
+body:not(#nt) .top-songs .c-listitem-short :is(.add, .menu-btn) :is(button, .nucleo-icon, .q-icon, svg), body:not(#nt) .top-songs .c-listitem-short .menu-btn { color: var(--systemSecondary, rgba(127,127,127,.8)); }
+/* the featured item's "Add" pill becomes Music's round + button */
+body:not(#nt) .pinned-mediaitem .add-to-library-btn { width: 30px; height: 30px; min-width: 0; padding: 0; border-radius: 50%; justify-content: center; background: var(--nt-fill); color: var(--systemPrimary, currentColor); }
+body:not(#nt) .pinned-mediaitem .add-to-library-btn :is(.q-icon, svg) { color: inherit; }
+body:not(#nt) .pinned-mediaitem .add-to-library-btn span:not(.c-tooltip-anchor) { display: none; }

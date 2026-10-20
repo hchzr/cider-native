@@ -13,6 +13,9 @@ body:not(#nt) .chrome-top .flipper-divider { display: none; }
 body:not(#nt) .chrome-top .nav-flipper { width: auto; grid-template-columns: none; grid-auto-flow: column; gap: 4px; }
 body:not(#nt) .chrome-top .chrome-button:has(.nucleo-icon[data-icon-name="plus"]) { display: none; }
 .chrome-top .chrome-button.lyrics-button, .chrome-top .chrome-button.party-button { display: none; }
+/* Cider tints the toolbar glyphs from the page artwork (dark glyphs for a light artist photo); in dark mode the page under
+   them is always dark here, and the artist hero darkens and blurs as it scrolls, so they stay white as in Music */
+body:not(#nt):not(.body--light) .ns-toolbar_inline { --subjectColorInlineText: #fff; }
 .chrome-top .chrome-button-group:not(.page-floating-group) > .chrome-button:nth-of-type(3) { display: none; }
 
 /* library pages: the page container has paint containment, so position:fixed is relative to it, not the window */

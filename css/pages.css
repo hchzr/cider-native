@@ -49,6 +49,12 @@ body:not(#nt):not(.body--light) .artist-page { --nt-artist: color-mix(in srgb, v
 body:not(#nt):not(.body--light) .banner-container { background: var(--nt-artist); }
 body:not(#nt):not(.body--light) .banner-container .header-blur-mask { background: linear-gradient(color-mix(in srgb, var(--nt-artist) 15%, transparent), color-mix(in srgb, var(--nt-artist) 90%, transparent)); }
 body:not(#nt):not(.body--light) .artist-body__reflection { display: none; }
+/* As in Music, the hero blurs as the page scrolls: a layer between the artwork and the name blurs what is under it, driven
+   by the page's scroll position (no script). It only exists once the page has moved, so a resting hero with motion
+   artwork is never re-blurred frame by frame. */
+@keyframes nt-hero-blur { to { backdrop-filter: blur(44px) saturate(1.4); } }
+body:not(#nt) #app-scroll-bounds { scroll-timeline: --nt-page block; }
+body:not(#nt) .banner-container::after { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; animation: nt-hero-blur linear forwards; animation-timeline: --nt-page; animation-range: 1px 300px; }
 body:not(#nt):not(.body--light) .artist-body--on-light { --systemPrimary: rgba(255,255,255,.92); --systemSecondary: rgba(255,255,255,.55); --textDefault: #fff; color: rgba(255,255,255,.92); }
 body:not(#nt) .top-songs .c-listitem-short { position: relative; }
 body:not(#nt) .top-songs .c-listitem-short::after { content: ""; position: absolute; left: 60px; right: 0; bottom: 0; height: .5px; background: var(--nt-hairline); pointer-events: none; }

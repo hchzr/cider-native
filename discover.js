@@ -314,7 +314,7 @@ h1 { all: unset; display: block; font-size: 22px; line-height: 27px; font-weight
 .round.spin .sf { animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
 .progress { margin-top: 16px; max-width: 420px; animation: fade .3s ease both; }
 .bar { height: 4px; border-radius: 2px; background: var(--fill2); overflow: hidden; }
-.bar i { display: block; height: 100%; width: calc(var(--p) * 100%); border-radius: 2px; background: var(--accent); transition: width .6s var(--ease); }
+.bar i { display: block; height: 100%; border-radius: 2px; background: var(--accent); transform: scaleX(var(--p)); transform-origin: left; transition: transform .6s var(--ease); }
 .step, .toast { font-size: 12px; color: var(--sec); margin-top: 7px; }
 .toast { animation: rise .35s var(--ease) both; }
 .err { font-size: 13px; margin-top: 12px; color: var(--sec); }

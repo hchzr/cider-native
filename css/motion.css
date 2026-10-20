@@ -1,0 +1,19 @@
+/* Apple-style motion: a long-tailed ease-out for everything - things arrive and settle, presses shrink and settle back
+   without overshoot (as Music's controls do). All of it is off under Reduce Motion (system setting or Cider's own). */
+@keyframes nt-menu-in { from { opacity: 0; transform: scale(.94) translateY(-4px); } to { opacity: 1; transform: none; } }
+@keyframes nt-sheet-in { from { opacity: 0; transform: translateY(14px) scale(.965); } to { opacity: 1; transform: none; } }
+@keyframes nt-page-in { from { opacity: 0; transform: translateY(10px) scale(.996); } to { opacity: 1; transform: none; } }
+@keyframes nt-page-out { to { opacity: 0; } }
+.q-menu { animation: nt-menu-in .26s var(--nt-ease) both; transform-origin: top left; }
+.q-dialog__inner > * { animation: nt-sheet-in .42s var(--nt-ease) both; }
+.q-dialog__backdrop { transition: opacity .3s var(--nt-ease); }
+::view-transition-old(root) { animation: nt-page-out .16s cubic-bezier(.4,0,1,1) both; }
+::view-transition-new(root) { animation: nt-page-in .45s var(--nt-ease) both; }
+body:not(#nt) .q-btn, body:not(#nt) .chrome-button, body:not(#nt) .ri-list-item { transition: transform .45s var(--nt-ease), background-color .2s var(--nt-ease), opacity .2s var(--nt-ease); }
+body:not(#nt) .q-btn:active, body:not(#nt) .chrome-button:active { transform: scale(.92); transition-duration: .08s; }
+body:not(#nt) .ri-list-item:active { transform: scale(.985); transition-duration: .08s; }
+@media (prefers-reduced-motion: reduce) {
+  .q-menu, .q-dialog__inner > *, ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  body:not(#nt) * { transition-duration: .01ms; }
+}
+html[reduced-motion=true] * { transition-duration: 0s; animation-duration: 0s; }

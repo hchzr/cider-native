@@ -1,0 +1,4 @@
+/* macOS overlay scrollbars (thin, shown while scrolling). scrollbar-color is inherited, and any non-auto value makes Chromium
+   ignore Cider's custom ::-webkit-scrollbar styling and use its overlay scrollbars instead. */
+html:not(#nt), body:not(#nt) { scrollbar-color: rgba(0,0,0,.36) transparent; }
+html:not(#nt):has(body:not(.body--light)), body:not(#nt):not(.body--light) { scrollbar-color: rgba(255,255,255,.36) transparent; }

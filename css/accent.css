@@ -1,0 +1,16 @@
+/* Apple Music red accent. Cider applies its accent inline from its settings; these win while the part is on. */
+body:not(#nt), :root:not(#nt) {
+  --keyColor: #fa2d48;
+  --musicKeyColor: #fa2d48;
+  --q-primary: #fa2d48;
+  --surfaceColor: #fa2d48;
+  --keyColor-tonal: color-mix(in srgb, #fa2d48 10%, rgb(30 30 30));
+  --glaze-accentColorBase: color-mix(in srgb, transparent, #fa2d48 20%);
+  --mats-accentBackground: color-mix(in srgb, rgb(5, 5, 5), #fa2d48 10%);
+  --mats-accentBackgroundDark: color-mix(in srgb, rgb(5, 5, 5), #fa2d48 5%);
+  --mats-accentElement: color-mix(in srgb, rgb(5, 5, 5), #fa2d48 25%);
+  --mats-accentOutline: color-mix(in srgb, #fa2d48, transparent 70%);
+  --mats-accentOutlineDark: color-mix(in srgb, #fa2d48, transparent 70%);
+  --mats-accentOutlineLight: color-mix(in srgb, #fa2d48, rgb(5, 5, 5) 10%);
+  --systemTertiary: color-mix(in srgb, #fa2d48, rgb(168 168 168 / 10%) 95%);
+}

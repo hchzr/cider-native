@@ -1,0 +1,9 @@
+/* The macOS system font (SF Pro) for the interface and lyrics. Cider sets these variables inline on <html> from its font
+   settings; while this part is on it overrides them, and turning it off hands control back to Cider's Settings. */
+:root:not(#nt), body:not(#nt) {
+  --fontFamily: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+  --fontFamilyLyrics: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+  --fontFamilyFallback: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --monoFont: ui-monospace, "SF Mono", Menlo, monospace;
+}
+body:not(#nt) { font-family: var(--fontFamily); }

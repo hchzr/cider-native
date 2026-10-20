@@ -1,0 +1,28 @@
+/* Window layout: sidebar full height on the left, content filling the rest edge to edge (no floating card, frame or notch).
+   Cider takes its 8px margin and 12pt radius from --viewportDist / --viewportRadius and the top-right notch from --cut-w/--cut-h.
+   Content sits on a plain surface: white in light mode, Music's dark grey (39,38,38, measured) in dark mode. */
+body:not(#nt) .new-shell-page-container { --viewportDist: 0px; --viewportRadius: 0px; --cut-w: 0px; --cut-h: 0px; box-shadow: none; border-radius: 0; }
+html:not([no-glass]), html:not([no-glass]) body { background-color: rgb(0 0 0 / .28); }
+html:not([no-glass]):has(body.body--light), html:not([no-glass]):has(body.body--light) body { background-color: transparent; }
+body:not(#nt) .new-shell-page-container:not([data-corner-cut=true]) { background-color: rgb(39 38 38); }
+body:not(#nt) .new-shell-page-container[data-corner-cut=true]::before { background: rgb(39 38 38); }
+body:not(#nt) .new-shell-page-container[data-corner-cut=true]::after { display: none; }
+body.body--light:not(#nt) .new-shell-page-container:not([data-corner-cut=true]) { background-color: #fff; }
+body.body--light:not(#nt) .new-shell-page-container[data-corner-cut=true]::before { background: #fff; }
+
+/* Content under the glass sidebar (macOS 26 Music): while the Native sidebar shows (html.nsb-left), the page extends under
+   it and everything is pushed back by the sidebar width, so shelves scroll under the glass and the sidebar blurs them.
+   --leftSidebarWidth is Cider's own variable (it follows the user's drag). */
+html.nsb-left body:not(#nt) .new-shell-page-container { margin-left: 0; }
+html.nsb-left body:not(#nt) .ns-toolbar_inline { left: var(--leftSidebarWidth); width: calc(100% - var(--leftSidebarWidth)); }
+html.nsb-left body:not(#nt) .q-page.pod-router-view { padding-left: calc(var(--leftSidebarWidth) + 34px); }
+/* pages built from full-size absolute layers (Albums, Songs, Artists) start after the sidebar instead */
+html.nsb-left body:not(#nt) .q-page.pod-router-view > :is(.page-margin-padding, .absolute-full, .absolute-top-left) { left: var(--leftSidebarWidth); right: 0; width: auto; }
+html.nsb-left body:not(#nt) .library-toolbar { left: calc(var(--leftSidebarWidth) + 190px); }
+/* shelves: the row reaches the window's left edge, its first card still lines up with the page */
+html.nsb-left body:not(#nt) .item-shelf, html.nsb-left body:not(#nt) .mediaitem-shelf-content {
+  margin-left: calc(-1 * (var(--leftSidebarWidth) + 34px)); padding-left: calc(var(--leftSidebarWidth) + 34px); scroll-padding-left: calc(var(--leftSidebarWidth) + 34px); }
+/* artist hero: under the glass too, its portrait and name centred on the content area */
+html.nsb-left body:not(#nt) .artist-page { margin-left: calc(-1 * (var(--leftSidebarWidth) + 34px)); }
+html.nsb-left body:not(#nt) .banner-container .header-content { padding-left: var(--leftSidebarWidth); }
+html.nsb-left body:not(#nt) .artist-body { padding-left: calc(var(--leftSidebarWidth) + 34px); }

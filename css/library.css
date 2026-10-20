@@ -1,0 +1,14 @@
+/* Library lists. Songs: plain header (no tint, no accent rule), zebra rows like Music's list, regular-weight titles.
+   Artists: 13pt names on hairline rows (the rule starts at the text, like Music), bold empty-state title. */
+body:not(#nt) .songs-page .header-container { background: var(--pageContainerBg, #fff); background-image: none; border-bottom: .5px solid var(--nt-hairline); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+body.body--light:not(#nt) .songs-page .header-container { background: #fff; }
+body:not(#nt) .songs-page .header-frow { background: transparent; }
+body:not(#nt) .songs-page .sortable-header { font-size: 11px; color: var(--nt-secondary); }
+body:not(#nt) .library-song-item { background: transparent; border-bottom: 0; border-radius: 0; }
+body:not(#nt) .library-song-item.alt-row { background: rgba(0,0,0,.035); }
+body:not(#nt):not(.body--light) .library-song-item.alt-row { background: rgba(255,255,255,.04); }
+body:not(#nt) .library-song-item .title-text, body:not(#nt) .library-song-item .fcol-text { font-size: 13px; font-weight: 400; }
+body:not(#nt) .artist-item { position: relative; border-radius: 0; }
+body:not(#nt) .artist-item::after { content: ""; position: absolute; left: 60px; right: 0; bottom: 0; height: .5px; background: var(--nt-hairline); pointer-events: none; }
+body:not(#nt) .artist-item .artist-name { font-size: 13px; }
+body:not(#nt) .artist-placeholder-label { font-size: 17px; font-weight: 700; color: inherit; opacity: 1; }

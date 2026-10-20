@@ -1,0 +1,36 @@
+/* Album and playlist pages (Music.app): plain page with no artwork colour wash, 270pt artwork, 22pt title, red artist line,
+   grey "Genre · Year · Tracks" line, light capsule buttons with accent glyphs, hairline-separated track list. */
+body:not(#nt) .color-bloom { display: none; }
+body:not(#nt) .album-artwork, body:not(#nt) .album-artwork .artwork { width: 270px; height: 270px; min-width: 270px; border-radius: 6px; }
+body:not(#nt) .album-artwork .artwork { box-shadow: 0 6px 20px rgba(0,0,0,.16), 0 0 0 .5px rgba(0,0,0,.08); background: transparent; }
+body:not(#nt) .album-details .title.title--large { font-size: 22px; line-height: 27px; font-weight: 700; letter-spacing: -0.2px; }
+body:not(#nt) .album-details .artist-chips { display: flex; flex-wrap: wrap; gap: 0 6px; margin-top: 1px; }
+body:not(#nt) .album-details .artist-chip { background: none; box-shadow: none; padding: 0; border: 0; min-height: 0; height: auto; flex: none; width: auto; min-width: 0; max-width: none; display: inline-flex; margin: 0; grid-template-columns: none; }
+body:not(#nt) .album-details .artist-chip .chip-artwork, body:not(#nt) .album-details .artist-chip .chip-favorite { display: none; }
+body:not(#nt) .album-details .artist-chip .chip-name { display: inline-flex; color: var(--keyColor); font-size: 22px; line-height: 27px; font-weight: 400; padding: 0; max-width: none; }
+body:not(#nt) .album-details .artist-chip:not(:last-child) .chip-name::after { content: ","; }
+body:not(#nt) .album-details .artist-chip:nth-last-child(2) .chip-name::after { content: "\00a0&"; }
+body:not(#nt) .album-details .meta-chips { gap: 0; margin-top: 4px; }
+body:not(#nt) .album-details .meta-chip { background: none; box-shadow: none; padding: 0; border-radius: 0; font-size: 11px; font-weight: 600; color: var(--nt-secondary); text-transform: none; letter-spacing: 0; }
+body:not(#nt) .album-details .meta-chip .nucleo-icon, body:not(#nt) .album-details .meta-chip::before, body:not(#nt) .album-details .meta-chip::after { display: none; }
+body:not(#nt) .album-details .meta-chip + .meta-chip > span:not(.c-tooltip-anchor)::before { content: "\00b7"; margin: 0 4px; }
+body:not(#nt) .album-details .blurb-text { font-size: 12px; line-height: 16px; color: var(--nt-secondary); }
+body:not(#nt) .album-playback-actions .c-btn { color: var(--keyColor); }
+body:not(#nt) .album-playback-actions .c-btn .c-btn--surface { background: rgba(0,0,0,.055); box-shadow: none; color: var(--keyColor); }
+body:not(#nt):not(.body--light) .album-playback-actions .c-btn .c-btn--surface { background: rgba(255,255,255,.1); }
+body:not(#nt) .album-playback-actions .button--primary .c-btn--surface { min-width: 112px; }
+body:not(#nt) .album-playback-actions .button--primary .qb-item-content { font-size: 15px; font-weight: 600; color: var(--keyColor); }
+body:not(#nt) .track-list .disc-header { background: transparent; font-size: 11px; font-weight: 600; color: var(--nt-secondary); padding-left: 0; }
+body:not(#nt) .track-list .disc-header :is(.nucleo-icon, svg, i, .q-icon, img) { display: none; }
+body:not(#nt) .track-list .ri-list-item { --tracklistAltRowColor: transparent; background: transparent; border-radius: 0; box-shadow: inset 0 -.5px 0 var(--nt-hairline); }
+body:not(#nt) .track-list .ri-list-item:hover { background: var(--nt-hover); border-radius: 6px; }
+body:not(#nt) .track-list .ri-list-item .title-text { font-size: 13px; font-weight: 400; }
+body:not(#nt) .track-list .ri-list-item .track-number, body:not(#nt) .track-list .ri-list-item .time { font-size: 13px; color: var(--nt-secondary); }
+body:not(#nt) .track-list .ri-list-item .menu-btn { color: var(--keyColor); }
+
+/* Artist pages: the header runs edge to edge under the toolbar like Music's artist hero (the page's own content box clips,
+   so the whole page is widened), and the content below sits on the plain page instead of an artwork-tinted card. */
+body:not(#nt) .artist-page { margin: -50px -34px 0; }
+body:not(#nt) .banner-container { width: auto; border-radius: 0; }
+body:not(#nt) .artist-body { background: none; padding-left: 34px; padding-right: 34px; }
+body:not(#nt):not(.body--light) .artist-body--on-light { --systemPrimary: rgba(255,255,255,.92); --systemSecondary: rgba(255,255,255,.55); --textDefault: #fff; color: rgba(255,255,255,.92); }

@@ -1,0 +1,3 @@
+/* Native apps use the arrow pointer for buttons and items; only text fields get the I-beam (resize handles keep theirs). */
+body:not(#nt) *:not(input):not(textarea):not([contenteditable=true]):not([class*=resiz]):not([class*=Resiz]) { cursor: default; }
+body:not(#nt) :is(input, textarea, [contenteditable=true]) { cursor: text; }

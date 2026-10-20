@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import { isTypingTarget, shortcutAction, stepVolume, trackKey, notificationFor, atmosVerdict, sfIconName, TRAFFIC_LIGHTS } from '../system-logic.js';
+assert.equal(isTypingTarget({ tagName: 'INPUT' }), true); assert.equal(isTypingTarget({ tagName: 'DIV', isContentEditable: true }), true); assert.equal(isTypingTarget({ tagName: 'DIV' }), false); assert.equal(isTypingTarget(null), false);
+assert.equal(shortcutAction({ key: ' ' }), null, 'Space is Cider\'s own shortcut; must not be handled twice'); assert.equal(shortcutAction({ code: 'Space' }), null);
+assert.equal(shortcutAction({ key: 'ArrowRight', metaKey: true }), 'next'); assert.equal(shortcutAction({ key: 'ArrowLeft', metaKey: true }), 'previous');
+assert.equal(shortcutAction({ key: 'ArrowUp', metaKey: true }), 'volumeUp'); assert.equal(shortcutAction({ key: 'ArrowDown', metaKey: true }), 'volumeDown');
+assert.equal(shortcutAction({ key: ' ', metaKey: true }), null, 'Cmd+Space belongs to Spotlight');
+assert.equal(shortcutAction({ key: ' ', shiftKey: true }), null, 'Shift+Space is Cider command center');
+assert.equal(shortcutAction({ key: 'ArrowRight' }), null); assert.equal(shortcutAction({ key: 'a' }), null);
+assert.equal(stepVolume(0.5, 1), 0.55); assert.equal(stepVolume(0.98, 1), 1); assert.equal(stepVolume(0.02, -1), 0); assert.equal(stepVolume(NaN, 1), 0.05);
+assert.equal(trackKey(null), ''); assert.equal(trackKey({ name: 'A', artistName: 'B', albumName: 'C' }), trackKey({ name: 'A', artistName: 'B', albumName: 'C' }));
+assert.notEqual(trackKey({ name: 'A', artistName: 'B' }), trackKey({ name: 'A', artistName: 'X' }));
+assert.deepEqual(notificationFor({ name: 'T', artistName: 'Ar', albumName: 'Al' }), { title: 'T', body: 'Ar — Al' });
+assert.equal(notificationFor({ name: 'T' }).body, '');
+assert.match(atmosVerdict({ flavor: '256', ec3Supported: true, outChannels: 2 }).inference, /not Atmos/);
+assert.match(atmosVerdict({ flavor: 'atmos', ec3Supported: false, outChannels: 2 }).inference, /binaural/);
+assert.match(atmosVerdict({ flavor: 'atmos', ec3Supported: true, outChannels: 2 }).inference, /AirPods will not offer Spatial Audio/);
+assert.match(atmosVerdict({ flavor: 'atmos', ec3Supported: true, outChannels: 8 }).inference, /8-channel PCM/);
+assert.doesNotMatch(atmosVerdict({ flavor: 'atmos', ec3Supported: true, outChannels: null }).inference, /null/);
+assert.match(atmosVerdict({ flavor: 'atmos', mode: 'off', ec3Supported: true, outChannels: 2 }).inference, /setting is off/);
+assert.equal(atmosVerdict({ flavor: 'x', supportedCodecs: ['ec-3', 'aac'] }).observed.supportedCodecs, 'ec-3, aac');
+
+// SF Symbol names for Quasar icons
+const known = new Set(['album', 'casino', 'ion-ios-star']);
+assert.equal(sfIconName('casino', known), 'casino');
+assert.equal(sfIconName('o_album', known), 'album', 'outlined Material prefix');
+assert.equal(sfIconName('sym_r_album', known), 'album', 'Material Symbols prefix');
+assert.equal(sfIconName('ion-ios-star', known), 'ion-ios-star');
+assert.equal(sfIconName('img:https://x/y.png', known), '', 'images are left alone');
+assert.equal(sfIconName('unknown_thing', known), '');
+assert.equal(sfIconName(undefined, known), '');
+assert.deepEqual(TRAFFIC_LIGHTS.music, { x: 19, y: 19 });
+console.log('system logic tests passed');

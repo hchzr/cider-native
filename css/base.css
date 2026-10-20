@@ -1,0 +1,11 @@
+/* Shared tokens used by the other parts. Always present while Native is on.
+   Selectors use `body:not(#nt)` so they outrank Cider's scoped [data-v] rules; every declaration is made !important at build time. */
+body:not(#nt) {
+  --nt-ease: cubic-bezier(.32,.72,0,1);
+  --nt-hairline: color-mix(in srgb, currentColor 11%, transparent);
+  --nt-hover: color-mix(in srgb, currentColor 7%, transparent);
+  --nt-fill: color-mix(in srgb, currentColor 9%, transparent);
+  --nt-selected: color-mix(in srgb, currentColor 13%, transparent);
+  --nt-secondary: color-mix(in srgb, currentColor 55%, transparent);
+  -webkit-font-smoothing: antialiased;
+}

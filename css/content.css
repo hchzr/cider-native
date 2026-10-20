@@ -1,0 +1,28 @@
+/* Home and browse, measured from Music.app's own accessibility frames at the same window size: content starts 34pt from the
+   sidebar, the page title is 34pt at y=50, shelf titles are 15pt semibold, cards have ~8pt corners and sit 20pt apart,
+   and shelves run under the right window edge with no fade. */
+body:not(#nt) {
+  --listItemBorderRadius: 8px; --mediaItemRadiusLarge: 8px; --mediaItemRadiusMedium: 8px; --mediaItemRadiusSmall: 5px;
+  --genericBorderRadius: 6px; --chromeCornerRadius: 8px; --radius: 6px;
+}
+body.body--light:not(#nt) .mediaitem-card .amac { box-shadow: 0 6px 18px rgba(0,0,0,.14); }
+body:not(#nt) .q-page.pod-router-view { padding-left: 34px; padding-right: 34px; padding-top: 50px; }
+body:not(#nt) .grouping-header .apple-heading { margin: 0 0 23px; padding: 0; line-height: 40px; }
+body:not(#nt) .shelf-title { font-size: 15px; font-weight: 600; letter-spacing: 0; line-height: 19px; }
+body:not(#nt) .shelf-header { min-height: 19px; }
+body:not(#nt) .item-shelf { gap: 13px; margin-right: -46px; padding-right: 46px; }   /* the shelf box clips its cards, so it extends under the edge */
+body:not(#nt) .mediaitem-shelf-content { --fade-left: none; --fade-right: none; -webkit-mask-image: none; mask-image: none;
+  column-gap: 20px; margin-right: -46px; padding-right: 46px; scroll-padding-inline: 12px; }
+body:not(#nt) .powerswoosh { width: 254px; }
+/* paging arrows: no dark discs; quiet chevrons that only appear while the pointer is over the shelf */
+body:not(#nt) .shelf-navigation { opacity: 0; transition: opacity .2s var(--nt-ease); }
+body:not(#nt) .item-shelf:hover .shelf-navigation, body:not(#nt) .shelf-navigation:focus-within { opacity: 1; }
+body:not(#nt) .shelf-navigation .c-btn { color: var(--nt-secondary); height: 22px; min-height: 22px; width: 22px; }
+body:not(#nt) .shelf-navigation .c-btn--surface { background: transparent; box-shadow: none; }
+body:not(#nt) .shelf-navigation .c-btn:hover .c-btn--surface { background: var(--nt-hover); }
+body:not(#nt) .shelf-navigation .c-btn[disabled] { opacity: .35; }
+/* page-level round buttons (Home's refresh...): plain glyphs, shown while the pointer is over their header */
+body:not(#nt) .grouping-header-actions { opacity: 0; transition: opacity .2s ease; }
+body:not(#nt) .grouping-header:hover .grouping-header-actions { opacity: 1; }
+body:not(#nt) .grouping-header-actions .c-btn--surface { background: transparent; box-shadow: none; }
+body:not(#nt) .grouping-header-actions .c-btn { color: var(--nt-secondary); }

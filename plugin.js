@@ -1,6 +1,6 @@
 // Native - makes Cider look and behave like Music on macOS.
 // One plugin, one menu entry ("… > Plugins > Native…"), and every part can be switched on or off live from that sheet.
-// Console: CiderNative.open() | .set('sidebar', false) | .setEnabled(false) | .diagnose()
+// Console: CiderNative.open() | .discover() | .set('sidebar', false) | .setEnabled(false) | .diagnostics()
 import { PARTS, PART, STORAGE_KEY, LEGACY_KEYS, RENAMED_KEYS, PLAYER_SCALE, defaultSettings, parseSettings, migrateLegacy, isOn, configOn, activeStyles, recommendedPlan } from './settings.js';
 import { STYLES } from './styles.js';
 import { app, ls, warn, refreshAppearance } from './core.js';
@@ -8,10 +8,12 @@ import { startSidebar, stopSidebar, setDiscoverRow, startUpNext, stopUpNext, sid
 import { startPlayer, stopPlayer, setPlayerScale, playerDiagnostics } from './player.js';
 import { startNotifications, stopNotifications, startShortcuts, stopShortcuts, startWindowControls, stopWindowControls, startIcons, stopIcons, iconsDiagnostics, audioReport } from './system.js';
 import { openPanel } from './panel.js';
+import { startDiscover, stopDiscover, openDiscover, discoverDiagnostics, discoverDebug } from './discover.js';
 
-const VERSION = '1.3.0';
+const VERSION = '1.4.0';
 const MODULES = {
-  sidebar: { start: (s) => startSidebar({ discover: isOn(s, 'discoverRow') }), stop: stopSidebar },
+  sidebar: { start: (s) => startSidebar({ discover: isOn(s, 'discover') }), stop: stopSidebar },
+  discover: { start: startDiscover, stop: stopDiscover },
   upNext: { start: startUpNext, stop: stopUpNext },
   player: { start: (s) => startPlayer({ scale: PLAYER_SCALE[s.playerSize] }), stop: stopPlayer },
   windowControls: { start: startWindowControls, stop: stopWindowControls },
@@ -45,7 +47,7 @@ function applyModules() {
       else if (!want && running.has(p.module)) { mod.stop(); running.delete(p.module); }
     } catch (err) { warn(`${p.module} failed to ${want ? 'start' : 'stop'}`, err); }
   }
-  setDiscoverRow(isOn(settings, 'discoverRow'));
+  setDiscoverRow(isOn(settings, 'discover'));
   setPlayerScale(PLAYER_SCALE[settings.playerSize]);
 }
 const apply = () => { applyStyles(); applyModules(); };
@@ -69,11 +71,13 @@ const api = {
   setPlayerSize(size) { if (PLAYER_SCALE[size]) { settings.playerSize = size; save(); setPlayerScale(PLAYER_SCALE[size]); } },
   reset() { settings = { ...defaultSettings(), recommendedApplied: true }; save(); writeConfig(recommendedPlan(getValue)); apply(); },
   open: () => openPanel(api),
+  discover: () => openDiscover(),
+  discoverDebug,
   audioReport,
-  diagnostics: () => ({
+  diagnostics: (opts) => ({
     version: VERSION, settings: api.state(), modules: [...running], styles: [...document.querySelectorAll('style[data-native]')].map((e) => e.dataset.native),
     path: (() => { try { return app()?.PodRouter?.()?.currentPath ?? null; } catch { return null; } })(),
-    sidebar: sidebarDiagnostics(), player: playerDiagnostics(), icons: iconsDiagnostics(),
+    sidebar: sidebarDiagnostics(), player: playerDiagnostics(), icons: iconsDiagnostics(), discover: discoverDiagnostics(opts),
   }),
 };
 

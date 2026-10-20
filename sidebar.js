@@ -2,7 +2,7 @@
 // Pins / playlists / favourites / profile are read from Cider's hidden sidebar and clicks are forwarded to its real buttons.
 // Event-driven: placement follows Cider's sidebar through a ResizeObserver, the scraped data refreshes when Cider's sidebar
 // DOM changes, and the only timers are a slow route/visibility check and the queue refresh while the panel is open.
-import { fitScale, compensate, needsCorrection, SEARCH, PRIMARY, LIBRARY, PLAYLISTS_ROOT, playlistPath, searchPath, activeNav, playlistsFromApi, artSized, initials, splitQueue, absoluteIndex, queueSignature, moveArgs, trackTitle, isExplicit, subtitleOf, fromLine, sourceName, cleanName, isFavouritesLabel, isActiveClass, pickArt, artByName, nowPlayingTrack, topIndex } from './sidebar-logic.js';
+import { fitScale, compensate, needsCorrection, SEARCH, PRIMARY, LIBRARY, PLAYLISTS_ROOT, DISCOVER, playlistPath, searchPath, activeNav, playlistsFromApi, artSized, initials, splitQueue, absoluteIndex, queueSignature, moveArgs, trackTitle, isExplicit, subtitleOf, fromLine, sourceName, cleanName, isFavouritesLabel, isActiveClass, pickArt, artByName, nowPlayingTrack, topIndex } from './sidebar-logic.js';
 import { SIDE, sfCss, sfTag } from './sf.js';
 import { app, rpc, ls, esc, bgImg, go, immersive, warn, reducedMotion, onAppearance, every, onFrames, trackFrames, CIDER_LEFT, CIDER_RIGHT } from './core.js';
 
@@ -155,17 +155,8 @@ class NativeLeft extends HTMLElement {
   onClick(e) {
     if (this.profileMode && !e.target.closest('[data-proxy="profile:0"]')) { this.profileMode = false; this.active = ''; }
     const pr = e.target.closest('[data-proxy]'); if (pr) { const [k, i] = pr.dataset.proxy.split(':'); this.proxy(k, +i); return; }
-    if (e.target.closest('[data-discover]')) { this.discover(); return; }
     const to = e.target.closest('[data-go]'); if (to) { go(to.dataset.go); return; }
     if (e.target.closest('[data-pins]')) { this.pinsOpen = !this.pinsOpen; this.unfold = this.pinsOpen; ls.set(LS_PINS, this.pinsOpen ? '1' : '0'); this.render(); }
-  }
-  async discover() {
-    if (this.discovering) return;
-    const d = window.CiderDiscover; if (!d?.runAndOpen) { this.discoverStatus = 'Smart Discover is not installed'; this.render(); return; }
-    this.discovering = true; this.discoverStatus = 'Finding new music…'; this.render();
-    try { await d.runAndOpen((m) => { this.discoverStatus = m; this.render(); }); this.discoverStatus = ''; }
-    catch (err) { warn('discover failed', err); this.discoverStatus = 'Discover failed – try again'; setTimeout(() => { this.discoverStatus = ''; this.render(); }, 4000); }
-    this.discovering = false; this.render();
   }
   setActive(path) {
     let a = activeNav(path);
@@ -200,7 +191,7 @@ class NativeLeft extends HTMLElement {
         ${LIBRARY.map((n) => this.row(n)).join('')}
         <div class="sec">Playlists</div>
         ${this.row(PLAYLISTS_ROOT)}
-        ${this.showDiscover ? `<button class="row" data-discover><span class="ic">${icon('spark')}</span><span class="tx">${esc(this.discoverStatus || 'Discover New Music')}</span></button>` : ''}
+        ${this.showDiscover ? this.row(DISCOVER) : ''}
         ${s?.fav ? `<button class="row ${s.fav.active ? 'active' : ''}" data-proxy="fav:0"><span class="ic">${icon('favsq')}</span><span class="tx">${esc(s.fav.name)}</span></button>` : ''}
         ${plRows}
       </nav>

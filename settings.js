@@ -16,7 +16,7 @@ export const GROUPS = [
 
 export const PARTS = [
   { id: 'sidebar', group: 'interface', title: 'Sidebar', desc: "Music's sidebar with SF Symbols, a search field, pins and playlists.", module: 'sidebar' },
-  { id: 'discoverRow', group: 'interface', parent: 'sidebar', title: 'Discover New Music row', desc: "Builds a playlist of songs you haven't heard yet (Smart Discover plugin)." },
+  { id: 'discover', group: 'interface', title: 'Discover', desc: "A page of new music picked from your listening, with mixes for each of your tastes; it learns from what you keep.", module: 'discover' },
   { id: 'upNext', group: 'interface', title: 'Up Next panel', desc: "Music's queue panel with Autoplay and AutoMix.", module: 'upNext' },
   { id: 'player', group: 'interface', title: 'Floating player', desc: "A glass player in place of Cider's bottom bar.", module: 'player' },
   { id: 'playerSize', group: 'interface', parent: 'player', title: 'Player size', choice: [['small', 'Smaller'], ['default', 'Default'], ['large', 'Larger']] },
@@ -59,6 +59,7 @@ export function parseSettings(raw) {
   if (!o || typeof o !== 'object') return d;
   const parts = { ...d.parts };
   for (const id of Object.keys(parts)) if (typeof o.parts?.[id] === 'boolean') parts[id] = o.parts[id];
+  if (typeof o.parts?.discoverRow === 'boolean' && typeof o.parts?.discover !== 'boolean') parts.discover = o.parts.discoverRow;   // before 1.4
   return {
     v: 1, parts,
     enabled: typeof o.enabled === 'boolean' ? o.enabled : d.enabled,

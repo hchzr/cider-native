@@ -16,6 +16,8 @@ export const LIBRARY = [
   { id: 'madeforyou', label: 'Made for You', path: '/am/home/made-for-you', icon: 'person' },
 ];
 export const PLAYLISTS_ROOT = { id: 'allplaylists', label: 'All Playlists', path: '/am/library/playlist-folder/p.playlistsroot', icon: 'grid9' };
+// Discover's own page, hosted by Cider's plugin-page route (it renders the <native-discover> element)
+export const DISCOVER = { id: 'discover', label: 'Discover New Music', path: '/ugc/plugins/ce/native-discover', icon: 'spark' };
 
 export const playlistPath = (id) => `/am/container/library-playlist/${encodeURIComponent(id)}`;
 export const searchPath = (q) => `/am/search/?term=${encodeURIComponent(String(q).trim())}`;
@@ -27,7 +29,7 @@ export const activeNav = (path = '') => {
   if (m) return `pl:${decodeURIComponent(m[1])}`;
   if (p.startsWith('/am/library/playlist-folder')) return PLAYLISTS_ROOT.id;
   if (p === '/am/listen-now' || p.startsWith('/am/listen-now/')) return 'home';   // Cider's own Home button opens /am/listen-now
-  const all = [SEARCH, ...PRIMARY, ...LIBRARY].sort((x, y) => y.path.length - x.path.length);
+  const all = [SEARCH, ...PRIMARY, ...LIBRARY, DISCOVER].sort((x, y) => y.path.length - x.path.length);
   for (const n of all) if (p === n.path || p.startsWith(n.path + '/')) return n.id;
   return '';
 };

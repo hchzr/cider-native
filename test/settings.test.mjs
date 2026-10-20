@@ -24,7 +24,9 @@ assert.ok(!('bogus' in p.parts)); assert.equal(p.playerSize, 'default');
 // on/off resolution: master switch, own flag, parent chain; config/choice parts are never "plugin-on"
 const s = defaultSettings();
 assert.equal(isOn(s, 'sidebar'), true);
-s.parts.sidebar = false; assert.equal(isOn(s, 'discoverRow'), false, 'child follows its parent');
+s.parts.sidebar = false; assert.equal(isOn(s, 'sidebar'), false, 'own flag');
+assert.equal(parseSettings(JSON.stringify({ parts: { discoverRow: false } })).parts.discover, false, 'the old Discover row switch carries over');
+assert.equal(parseSettings(JSON.stringify({ parts: { discoverRow: false, discover: true } })).parts.discover, true, 'the new switch wins');
 s.parts.sidebar = true; s.enabled = false; assert.equal(isOn(s, 'sidebar'), false, 'master switch');
 assert.equal(isOn(defaultSettings(), 'macSizing'), false); assert.equal(isOn(defaultSettings(), 'nope'), false);
 
